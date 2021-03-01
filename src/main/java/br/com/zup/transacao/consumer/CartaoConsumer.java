@@ -4,16 +4,19 @@ import br.com.zup.transacao.transacao.Cartao;
 
 import javax.validation.constraints.NotBlank;
 
-public class CartaoConsumerResponse {
+public class CartaoConsumer {
 
     @NotBlank
     private String id;
     @NotBlank
     private String email;
 
-    public CartaoConsumerResponse(@NotBlank String id, @NotBlank String email) {
-        this.id = id;
-        this.email = email;
+    public String getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public Cartao toCartao() {

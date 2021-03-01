@@ -1,10 +1,11 @@
 package br.com.zup.transacao.kafka;
 
-import br.com.zup.transacao.consumer.TransacaoConsumerResponse;
+import br.com.zup.transacao.consumer.TransacaoConsumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
@@ -13,12 +14,21 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import java.util.HashMap;
 import java.util.Map;
 
+@Configuration
 public class KafkaConfiguration {
 
     private final KafkaProperties kafkaProperties;
 
     public KafkaConfiguration(KafkaProperties kafkaProperties) {
         this.kafkaProperties = kafkaProperties;
+    }
+
+    @Bean
+    public ConsumerFactory<String, TransacaoConsumer> transactionConsumerFactory() {
+        StringDeserializer stringDeserializer = new StringDeserializer();
+        JsonDeserializer<TransacaoConsumer> jsonDeserializer = new JsonDeserializer<>(TransacaoConsumer.class, false);
+
+        return new DefaultKafkaConsumerFactory<>(consumerConfigurations(), stringDeserializer, jsonDeserializer);
     }
 
     public Map<String, Object> consumerConfigurations() {
@@ -33,16 +43,8 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public ConsumerFactory<String, TransacaoConsumerResponse> transactionConsumerFactory() {
-        StringDeserializer stringDeserializer = new StringDeserializer();
-        JsonDeserializer<TransacaoConsumerResponse> jsonDeserializer = new JsonDeserializer<>(TransacaoConsumerResponse.class, false);
-
-        return new DefaultKafkaConsumerFactory<>(consumerConfigurations(), stringDeserializer, jsonDeserializer);
-    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, TransacaoConsumerResponse> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, TransacaoConsumerResponse> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, TransacaoConsumer> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, TransacaoConsumer> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(transactionConsumerFactory());
 
         return factory;

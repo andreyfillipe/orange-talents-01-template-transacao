@@ -1,24 +1,46 @@
 package br.com.zup.transacao.consumer;
 
 import br.com.zup.transacao.transacao.Transacao;
-import br.com.zup.transacao.transacao.TransacaoRepository;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-@Component
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 public class TransacaoConsumer {
 
-    private TransacaoRepository transacaoRepository;
+    @NotBlank
+    private String id;
+    @NotNull
+    private BigDecimal valor;
+    @NotNull
+    private EstabelecimentoConsumer estabelecimento;
+    @NotNull
+    private CartaoConsumer cartao;
+    @NotNull
+    private LocalDateTime efetivadaEm;
 
-    public TransacaoConsumer(TransacaoRepository transacaoRepository) {
-        this.transacaoRepository = transacaoRepository;
+    public String getId() {
+        return id;
     }
 
-    @Transactional
-    @KafkaListener(topics = "${spring.kafka.topic.transactions}")
-    public void consume(TransacaoConsumerResponse response) {
-        Transacao transacao = response.toTransacao();
-        this.transacaoRepository.save(transacao);
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public EstabelecimentoConsumer getEstabelecimento() {
+        return estabelecimento;
+    }
+
+    public CartaoConsumer getCartao() {
+        return cartao;
+    }
+
+    public LocalDateTime getEfetivadaEm() {
+        return efetivadaEm;
+    }
+
+    public Transacao toTransacao() {
+        return new Transacao(this.id, this.valor, this.estabelecimento.toEstabelecimento(), this.cartao.toCartao(), this.efetivadaEm);
     }
 }

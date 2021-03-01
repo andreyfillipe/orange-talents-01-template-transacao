@@ -11,14 +11,15 @@ services:
     depends_on:
       - "mysql"
       - "transacoes"
+      - "kafka"
     environment:
       DATABASE_DRIVER: "com.mysql.cj.jdbc.Driver"
       DATABASE_URL: "jdbc:mysql://mysql:3306/transacao?serverTimezone=UTC"
       DATABASE_USERNAME: "root"
       DATABASE_PASSWORD: "root"
       DATABASE_DIALECT: "org.hibernate.dialect.MySQL5InnoDBDialect"
-      KAFKA_HOST: "http://kafka:9092"
-      KAFKA_CONSUMER_GROUP_ID: "minha-aplicacao"
+      KAFKA_HOST: "http://kafka:29092"
+      KAFKA_CONSUMER_GROUP_ID: "transacoes"
       KAFKA_AUTO-OFFSET-RESET: "latest"
       KEYCLOAK_ISSUER_URI: "http://keycloak:8080/auth/realms/nosso-cartao"
       KEYCLOAK_JWKS_URI: "http://keycloak:8080/auth/realms/nosso-cartao/protocol/openid-connect/certs"

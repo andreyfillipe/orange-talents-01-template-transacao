@@ -4,7 +4,7 @@ import br.com.zup.transacao.transacao.Estabelecimento;
 
 import javax.validation.constraints.NotBlank;
 
-public class EstabelecimentoConsumerResponse {
+public class EstabelecimentoConsumer {
 
     @NotBlank
     private String nome;
@@ -13,10 +13,16 @@ public class EstabelecimentoConsumerResponse {
     @NotBlank
     private String endereco;
 
-    public EstabelecimentoConsumerResponse(@NotBlank String nome, @NotBlank String cidade, @NotBlank String endereco) {
-        this.nome = nome;
-        this.cidade = cidade;
-        this.endereco = endereco;
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public String getEndereco() {
+        return endereco;
     }
 
     public Estabelecimento toEstabelecimento() {
